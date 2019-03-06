@@ -11,27 +11,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
  * @modify date 2019-01-11 17:38:37
  * @desc [Roles and Perm detect]
  */
-// ### Example:
-// app.Use(Roles({
-//   async failureHandler(ctx, action){
-//     ctx.status = 403
-//     ctx.body = {
-//       message: 'access Denied, you don\'t have permission.'
-//     }
-//   },
-//   async roleHandler(ctx, action) {
-//     const [role, permission] = action.split('@')
-//     const accessData = await Identity.getAccessData(ctx)
-//     return true
-//   }
-// }))
 const Roles = require('koa-roles');
 
 const assert = require('assert').strict;
 
 const is = require('is');
 
-module.exports = (_ref) => {
+const repo = module.exports = (_ref) => {
   let {
     failureHandler =
     /*#__PURE__*/
@@ -39,7 +25,7 @@ module.exports = (_ref) => {
       var _ref2 = _asyncToGenerator(function* (ctx, action) {
         ctx.status = 500;
         ctx.body = {
-          message: 'access Denied, you don\'t have permission.'
+          message: 'Access Denied, you don\'t have permission.'
         };
       });
 
@@ -64,4 +50,56 @@ module.exports = (_ref) => {
       roles
     };
   };
+};
+/**
+ * Transform string action to object action
+ * that contains roles and permits
+ */
+
+
+repo.transformAction = action => {
+  let tfAction;
+  if (!action) return null;
+
+  if (typeof action === 'string') {
+    tfAction = action.split(';').filter(rp => rp).map(rp => {
+      const splites = rp.split('@');
+
+      if (splites.length === 1) {
+        return {
+          roles: splites[0].split(',').map(x => x.trim()).filter(x => x),
+          permits: []
+        };
+      }
+
+      return {
+        roles: splites[0].split(',').map(x => x.trim()).filter(x => x),
+        permits: splites[1].split(',').map(x => x.trim()).filter(x => x)
+      };
+    });
+  }
+
+  if (Array.isArray(action)) {
+    tfAction = action.map(rp => {
+      if (typeof rp === 'string') {
+        const splites = rp.split('@');
+
+        if (splites.length === 1) {
+          return {
+            roles: splites[0].split(',').map(x => x.trim()).filter(x => x),
+            permits: []
+          };
+        }
+
+        return {
+          roles: splites[0].split(',').map(x => x.trim()).filter(x => x),
+          permits: splites[1].split(',').map(x => x.trim()).filter(x => x)
+        };
+      }
+
+      return rp;
+    });
+  }
+
+  return tfAction;
 };
