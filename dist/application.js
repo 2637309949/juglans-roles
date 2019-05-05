@@ -62,7 +62,7 @@ repo.transformAction = action => {
   if (!action) return null;
 
   if (typeof action === 'string') {
-    tfAction = action.split(';').filter(rp => rp).map(rp => {
+    tfAction = action.split(';').filter(rp => rp).map(rp => rp.trim()).map(rp => {
       const splites = rp.split('@');
 
       if (splites.length === 1) {
