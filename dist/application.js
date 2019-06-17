@@ -4,13 +4,9 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-/**
- * @author [Double]
- * @email [2637309949@qq.com]
- * @create date 2019-01-11 17:38:37
- * @modify date 2019-01-11 17:38:37
- * @desc [Roles and Perm detect]
- */
+// Copyright (c) 2018-2020 Double.  All rights reserved.
+// Use of this source code is governed by a MIT style
+// license that can be found in the LICENSE file.
 const Roles = require('koa-roles');
 
 const assert = require('assert').strict;
@@ -23,7 +19,7 @@ const repo = module.exports = (_ref) => {
     /*#__PURE__*/
     function () {
       var _ref2 = _asyncToGenerator(function* (ctx, action) {
-        ctx.status = 500;
+        ctx.status = 403;
         ctx.body = {
           message: 'Access Denied, you don\'t have permission.'
         };
